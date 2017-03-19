@@ -51,7 +51,7 @@ resource "aws_route_table_association" "public" {
 }
 
 resource "aws_eip" "nat" {
-	count = "${ var.natEnabled || var.private ? length(split(",", var.azs)) : 0 }"
+	count = "${ var.natEnabled && var.public ? length(split(",", var.azs)) : 0 }"
 
 	vpc = true
 	

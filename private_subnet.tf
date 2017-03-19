@@ -24,13 +24,22 @@ resource "aws_route_table" "private" {
 	}
 }
 
-resource "aws_route" "nat" {
-	count = "${ var.private ? length(split(",", var.azs)) : 0 }"
+resource "aws_route" "nat_default" {
+	count = "${ var.private && var.public ? length(split(",", var.azs)) : 0 }"
 
 	route_table_id			= "${ element(aws_route_table.private.*.id, count.index) }"
 	destination_cidr_block	= "0.0.0.0/0"
-	nat_gateway_id			= "${ var.public ? element(aws_nat_gateway.nat.*.id, count.index) : var.nat_id }"
+	nat_gateway_id			= "${ element(concat(aws_nat_gateway.nat.*.id, list("")), count.index) }"
 }
+
+resource "aws_route" "nat_private_only" {
+	count = "${ var.private && !var.public ? length(split(",", var.azs)) : 0 }"
+
+	route_table_id			= "${ element(aws_route_table.private.*.id, count.index) }"
+	destination_cidr_block	= "0.0.0.0/0"
+	nat_gateway_id			= "${ element(split(",", var.nat_id), count.index) }"
+}
+
 
 resource "aws_route_table_association" "private" {
 	count = "${ var.private ? length(split(",", var.azs)) : 0 }"

@@ -58,9 +58,6 @@ resource "aws_eip" "nat" {
 	lifecycle {
 		create_before_destroy = true
 	}
-
-	tags {
-		Cost_Center = "${ var.cost_center }"
 }
 
 resource "aws_nat_gateway" "nat" {
@@ -71,9 +68,5 @@ resource "aws_nat_gateway" "nat" {
 
 	lifecycle {
 		create_before_destroy = true
-	}
-
-	tags {
-		Cost_Center = "${ var.cost_center }"
 	}
 }

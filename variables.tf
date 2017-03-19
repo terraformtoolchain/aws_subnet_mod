@@ -47,7 +47,7 @@ variable "private" {
 variable "nat_id" {
 	type = "string"
 	description = "The ID of the NAT gateway for private subnets. (Required if public = false)"
-	default = "none"
+	default = ""
 }
 
 variable "starting_bit_private" {

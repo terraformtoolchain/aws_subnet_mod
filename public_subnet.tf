@@ -22,6 +22,7 @@ resource "aws_subnet" "public" {
 
 	tags {
 		Name		= "${ var.name }-public-subnet-${ element(split(",", var.azs), count.index) }"
+		SubnetType		= "Public"
 	}
 }
 

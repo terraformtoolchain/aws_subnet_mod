@@ -20,9 +20,16 @@ resource "aws_route_table" "private" {
 	vpc_id = "${ var.vpc_id }"
 
 	tags {
-		Name = "${ var.name }-rt-private"
+		Name = "${ var.name }-rt-private-${ element(split(",", var.azs), count.index) }"
 	}
 }
+
+/*
+Awful hack below because elements currently cannot be used with an empty list.
+Since nat_id may be either imported or interpolated depending on how the
+module is used, two separate nat resources had to be made. Only one will
+be used. See the count ternary functions for insight.
+*/
 
 resource "aws_route" "nat_default" {
 	count = "${ var.private && var.public ? length(split(",", var.azs)) : 0 }"
